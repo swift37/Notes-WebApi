@@ -1,4 +1,6 @@
-﻿namespace Notes.DAL
+﻿using Notes.DAL.Context;
+
+namespace Notes.DAL
 {
     public class DbInItializer
     {

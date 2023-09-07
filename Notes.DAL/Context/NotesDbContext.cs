@@ -3,7 +3,7 @@ using Notes.Application.Interfaces;
 using Notes.DAL.EntityTypeConfigurations;
 using Notes.Domain;
 
-namespace Notes.DAL
+namespace Notes.DAL.Context
 {
     public class NotesDbContext : DbContext, INotesDbContext
     {
