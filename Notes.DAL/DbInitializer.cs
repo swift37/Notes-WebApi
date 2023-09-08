@@ -2,7 +2,7 @@
 
 namespace Notes.DAL
 {
-    public class DbInItializer
+    public static class DbInitializer
     {
         public static void Initialize(NotesDbContext context)
         {
