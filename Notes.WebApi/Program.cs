@@ -5,6 +5,7 @@ using Notes.DAL.Context;
 using Notes.DAL;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Notes.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseCustomExceptionHandler();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
