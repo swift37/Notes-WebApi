@@ -6,6 +6,7 @@ using Notes.DAL;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Notes.WebApi.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile(new AssemblyMappingProfile(typeof(INotesDbContext).Assembly));
 });
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DbConnection");
 builder.Services.AddDbContext<INotesDbContext, NotesDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -33,6 +34,19 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin();
     });
 });
+
+builder.Services.AddAuthentication(config =>
+{
+    config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+})
+    .AddJwtBearer("Bearer", opt =>
+    {
+        opt.Authority = "https://localhost:7122/";
+        opt.Audience = "NotesWebAPI";
+        opt.RequireHttpsMetadata = false;
+    });
 
 var app = builder.Build();
 
@@ -58,6 +72,8 @@ app.UseCustomExceptionHandler();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 //app.MapControllerRoute(
