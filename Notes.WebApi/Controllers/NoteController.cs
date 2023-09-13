@@ -11,8 +11,9 @@ using Notes.WebApi.Models;
 
 namespace Notes.WebApi.Controllers
 {
+    [ApiVersionNeutral]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/{version:apiVersion}/[controller]")]
     public class NoteController : BaseController
     {
         private readonly IMapper _mapper;

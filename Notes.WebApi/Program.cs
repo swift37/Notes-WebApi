@@ -7,6 +7,10 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Notes.WebApi.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Notes.WebApi;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,14 +52,16 @@ builder.Services.AddAuthentication(config =>
         opt.RequireHttpsMetadata = false;
     });
 
-builder.Services.AddSwaggerGen(cfg =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    cfg.IncludeXmlComments(xmlPath);
-});
+builder.Services.AddVersionedApiExplorer(opt => opt.GroupNameFormat = "'v'VVV");
+
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddApiVersioning();
 
 var app = builder.Build();
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -78,8 +84,13 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI(cfg =>
 {
+    foreach (var desc in provider.ApiVersionDescriptions)
+    {
+        cfg.SwaggerEndpoint(
+            $"/swagger/{desc.GroupName}/swagger.json",
+            desc.GroupName.ToUpperInvariant());
+    }
     cfg.RoutePrefix = string.Empty;
-    cfg.SwaggerEndpoint("swagger/v1/swagger.json", "Notes API");
 });
 app.UseCustomExceptionHandler();
 app.UseRouting();
@@ -87,10 +98,8 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseApiVersioning();
 
 app.MapControllers();
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
