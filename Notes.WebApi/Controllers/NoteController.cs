@@ -106,7 +106,7 @@ namespace Notes.WebApi.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Upate([FromBody] UpdateNoteDTO updateNoteDTO)
+        public async Task<IActionResult> Update([FromBody] UpdateNoteDTO updateNoteDTO)
         {
             var command = _mapper.Map<UpdateNoteCommand>(updateNoteDTO);
             command.UserId = UserId;
