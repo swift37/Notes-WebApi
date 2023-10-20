@@ -12,7 +12,7 @@ namespace Notes.Application.Notes.Commands.UpdateNote
                 .NotEqual(Guid.Empty);
             RuleFor(updateNoteComm => updateNoteComm.Title)
                 .NotEmpty()
-                .MaximumLength(128);
+                .MaximumLength(32);
         }
     }
 }

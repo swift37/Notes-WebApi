@@ -10,7 +10,7 @@ namespace Notes.DAL.EntityTypeConfigurations
         {
             builder.HasKey(note => note.Id);
             builder.HasIndex(note => note.Id).IsUnique();
-            builder.Property(note => note.Title).HasMaxLength(128);
+            builder.Property(note => note.Title).HasMaxLength(32);
         }
     }
 }

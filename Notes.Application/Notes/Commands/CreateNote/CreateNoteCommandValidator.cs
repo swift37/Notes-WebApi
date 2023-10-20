@@ -10,7 +10,7 @@ namespace Notes.Application.Notes.Commands.CreateNote
                 .NotEqual(Guid.Empty);
             RuleFor(createNoteComm => createNoteComm.Title)
                 .NotEmpty()
-                .MaximumLength(128);
+                .MaximumLength(32);
         }
     }
 }
