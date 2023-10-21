@@ -21,6 +21,7 @@ namespace Notes.Application.Notes.Queries.GetNoteList
             var notesQuery = await _context.Notes
                 .Where(note => note.UserId == request.UserId)
                 .ProjectTo<NoteLookupDTO>(_mapper.ConfigurationProvider)
+                .OrderByDescending(note => note.CreationDate)
                 .ToListAsync(cancellationToken);
 
             return new NoteListVM { Notes = notesQuery };
